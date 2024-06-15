@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    environment:
+      SERVER_DB__uri: "postgresql://postgres:postgres@db:5432/${SERVER_DB:-self-management}"
+      SERVER_DB__connect_args: "{}"
+    volumes:
+      - .:/home/app/api
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+  db:
+    build: postgres
+    image: self_management_postgres-13-alpine-multi-user
+    volumes:
+      - $HOME/.postgres/self_management_db/data/postgresql:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DBS=self_management, self_management_test
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
