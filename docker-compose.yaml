@@ -8,7 +8,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      SERVER_DB__uri: "postgresql://postgres:postgres@db:5432/${SERVER_DB:-self-management}"
+      SERVER_DB__uri: "postgresql://postgres:postgres@db:5432/${SERVER_DB:-self_management}"
       SERVER_DB__connect_args: "{}"
     volumes:
       - .:/home/app/api

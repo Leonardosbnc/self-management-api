@@ -1,3 +1,3 @@
-from .models import TimestamppedModel
+from .models import TimestamppedModel, CustomValidateModel
 
-__all__ = ["TimestamppedModel"]
+__all__ = ["TimestamppedModel", "CustomValidateModel"]
