@@ -7,7 +7,7 @@ from pydantic import BaseModel
 class OrderDetailedResponse(BaseModel):
     id: UUID
     category: str
-    description: str
+    description: str | None
     date: datetime
     value: int
     value_fiat: int
@@ -18,7 +18,7 @@ class OrderDetailedResponse(BaseModel):
 
 class OrderRequest(BaseModel):
     category: str
-    description: Optional[str]
+    description: Optional[str] = None
     date: datetime
     value: int
     value_fiat: int

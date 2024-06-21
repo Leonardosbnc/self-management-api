@@ -18,8 +18,9 @@ class Plan(CustomValidateModel, TimestamppedModel, table=True):
     requirements: list['PlanRequirement'] = Relationship(back_populates="plan")
     installments: list['PlanInstallment'] = Relationship(back_populates="plan")
 
-    def validate(self):
-        if self.status not in STATUS:
+    @classmethod
+    def validate(cls, obj):
+        if obj["status"] not in STATUS:
             raise ValueError(f'Status must be one of the following {STATUS}')
 
 
@@ -34,11 +35,12 @@ class PlanRequirement(CustomValidateModel, TimestamppedModel, table=True):
     plan_id: UUID = Field(foreign_key='plan.id')
     plan: Plan = Relationship(back_populates="requirements")
 
-    def validate(self):
+    @classmethod
+    def validate(cls, obj):
         if (
-            self.due_date is not None
-            and self.plan.due_date is not None
-            and self.due_date > self.plan.due_date
+            obj["due_date"] is not None
+            and obj["plan"].due_date is not None
+            and obj["due_date"] > obj["plan"].due_date
         ):
             raise ValueError('Requirement due_date cannot be greater than plan due_date')
 

@@ -19,9 +19,10 @@ class Order(CustomValidateModel, TimestamppedModel, table=True):
     operation_type: str = Field(nullable=False)
     status: str = Field(nullable=False)
 
-    def validate(self):
-        if self.operation_type not in ORDER_OPERATIONS:
+    @classmethod
+    def validate(cls, obj):
+        if obj["operation_type"] not in ORDER_OPERATIONS:
             raise ValueError(f'Operation Type must be one of the following {ORDER_OPERATIONS}')
 
-        if self.status not in STATUS:
+        if obj["status"] not in STATUS:
             raise ValueError(f'Status must be one of the following {STATUS}')
