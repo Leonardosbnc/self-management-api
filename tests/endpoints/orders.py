@@ -31,8 +31,7 @@ def test_list_orders(session: Session, client: TestClient):
     res = client.get('/orders/')
     data = res.json()
 
-    print(data)
-    assert res.status_code == 201
+    assert res.status_code == 200
     assert len(data) == 2
     assert str(data[0]["id"]) == str(order_1.id)
     assert str(data[1]["id"]) == str(order_2.id)
