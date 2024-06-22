@@ -2,10 +2,11 @@ import datetime
 
 from uuid import UUID, uuid4
 from typing import Optional
-from sqlmodel import Field, Relationship
+from sqlmodel import Field, Relationship, select, Session
 
 from api.utils import TimestamppedModel, CustomValidateModel
 from api.consts import STATUS
+from api.db import engine
 
 
 class Plan(CustomValidateModel, TimestamppedModel, table=True):
@@ -19,7 +20,7 @@ class Plan(CustomValidateModel, TimestamppedModel, table=True):
     installments: list['PlanInstallment'] = Relationship(back_populates="plan")
 
     @classmethod
-    def validate(cls, obj):
+    async def validate(cls, obj):
         if obj["status"] not in STATUS:
             raise ValueError(f'Status must be one of the following {STATUS}')
 
@@ -36,11 +37,20 @@ class PlanRequirement(CustomValidateModel, TimestamppedModel, table=True):
     plan: Plan = Relationship(back_populates="requirements")
 
     @classmethod
-    def validate(cls, obj):
+    async def validate(cls, obj: dict, session=None):
+        obj.setdefault('due_date', None)
+        query = select(Plan).where(Plan.id == obj["plan_id"])
+
+        if session is None:
+            with Session(engine) as session:
+                plan = session.exec(query).first()
+        else:
+            plan = session.exec(query).first()
+
         if (
             obj["due_date"] is not None
-            and obj["plan"].due_date is not None
-            and obj["due_date"] > obj["plan"].due_date
+            and plan.due_date is not None
+            and obj["due_date"] > plan.due_date
         ):
             raise ValueError('Requirement due_date cannot be greater than plan due_date')
 

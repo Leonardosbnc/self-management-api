@@ -13,6 +13,7 @@ Source = 'https://github.com/Leonardosbnc/self-management-api'
 [project.optional-dependencies]
 dev = [
 	"pytest",
+	"pytest-asyncio",
 	"ipdb",
 	"ipython",
 	"pip-tools",
@@ -43,6 +44,9 @@ dependencies = { file = "requirements.txt" }
 testpaths = 'tests'
 xfail_strict = true
 filterwarnings = ['error', 'ignore:path is deprecated.*:DeprecationWarning:']
+markers = [
+    "asyncio",
+]
 
 [tool.coverage.run]
 source = ['api']

@@ -3,6 +3,7 @@ ipdb            # debugger
 sdb             # debugger remoto
 pip-tools       # lock de dependencias
 pytest          # execução de testes
+pytest-asyncio
 pytest-order    # ordenação de testes
 httpx           # requests async para testes
 black           # auto formatação

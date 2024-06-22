@@ -9,11 +9,11 @@ class TimestamppedModel(SQLModel):
 
 class CustomValidateModel(SQLModel):
     @classmethod
-    def validate(self, obj):
+    async def validate(self, obj):
         raise NotImplementedError()
 
     @classmethod
-    def model_validate(cls, obj, **kwargs):
-        cls.validate(dict(obj))
+    async def model_validate(cls, obj, **kwargs):
+        await cls.validate(dict(obj))
 
         return super().model_validate(obj=obj, **kwargs)

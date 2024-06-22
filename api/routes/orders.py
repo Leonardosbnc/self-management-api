@@ -44,7 +44,7 @@ async def delete_order(*, id: UUID, session: Session = ActiveSession):
 
 @router.post("/", response_model=OrderDetailedResponse, status_code=201)
 async def create_order(*, session: Session = ActiveSession, order: OrderRequest):
-    db_order = Order.model_validate(order)
+    db_order = await Order.model_validate(order)
     session.add(db_order)
     session.commit()
     session.refresh(db_order)

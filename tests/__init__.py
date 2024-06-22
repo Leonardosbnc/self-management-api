@@ -30,3 +30,4 @@ def client_fixture(session: Session):
 
 
 from .endpoints import *
+from .models import *
