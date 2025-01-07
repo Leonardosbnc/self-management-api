@@ -5,6 +5,15 @@ from fastapi.testclient import TestClient
 
 from api.models import Order
 
+default_order_data = {
+    "category": "crypto",
+    "date": str(datetime.now()),
+    "value": "1",
+    "asset": "btc",
+    "operation_type": "BUY",
+    "status": "ACTIVE",
+}
+
 
 def test_list_orders(session: Session, client: TestClient):
     order_1 = Order(
@@ -60,17 +69,13 @@ def test_retrieve_order(session: Session, client: TestClient):
 
 
 def test_create_order(session: Session, client: TestClient):
-    order_data = dict(
-        category="crypto",
-        date=str(datetime.now()),
-        value="1",
-        value_fiat="100",
-        asset="btc",
-        operation_type="BUY",
-        status="ACTIVE",
+    res = client.post(
+        '/orders/',
+        json={
+            **default_order_data,
+            "value_fiat": "100",
+        },
     )
-
-    res = client.post('/orders/', json=order_data)
     data = res.json()
     db_order = session.exec(select(Order)).first()
 
@@ -78,17 +83,8 @@ def test_create_order(session: Session, client: TestClient):
     assert str(data["id"]) == str(db_order.id)
 
 
-def test_error_if_miss_required_field_on_create_order(session: Session, client: TestClient):
-    order_data = dict(
-        category="crypto",
-        date=str(datetime.now()),
-        value="1",
-        asset="btc",
-        operation_type="BUY",
-        status="ACTIVE",
-    )
-
-    res = client.post('/orders/', json=order_data)
+def test_error_if_miss_required_field_on_create_order(_, client: TestClient):
+    res = client.post('/orders/', json=default_order_data)
 
     assert res.status_code == 422
 
@@ -129,7 +125,7 @@ def test_update_order(session: Session, client: TestClient):
     session.commit()
     session.refresh(order)
 
-    update_data = dict(status='COMPLETED', description='test description', category='cat test')
+    update_data = {"status": 'COMPLETED', "description": 'test description', "category": 'cat test'}
 
     res = client.patch(
         f'/orders/{order.id}',

@@ -15,28 +15,28 @@ router = APIRouter()
 
 @router.get("/", response_model=List[OrderDetailedResponse], status_code=200)
 async def orders(*, session: Session = ActiveSession):
-    orders = session.exec(select(Order)).all()
-    return orders
+    orders_data = session.exec(select(Order)).all()
+    return orders_data
 
 
-@router.get("/{id}", response_model=OrderDetailedResponse, status_code=200)
-async def order(*, id: UUID, session: Session = ActiveSession):
-    order = session.get(Order, id)
+@router.get("/{order_id}", response_model=OrderDetailedResponse, status_code=200)
+async def get_order_by_id(*, order_id: UUID, session: Session = ActiveSession):
+    order_data = session.get(Order, order_id)
 
-    if order is None:
+    if order_data is None:
         raise HTTPException(status_code=404)
 
-    return order
+    return order_data
 
 
-@router.patch("/{id}", response_model=OrderDetailedResponse, status_code=200)
+@router.patch("/{order_id}", response_model=OrderDetailedResponse, status_code=200)
 async def update_order(
     *,
-    id: UUID,
+    order_id: UUID,
     order: OrderUpdate,
     session: Session = ActiveSession,
 ):
-    db_order = session.get(Order, id)
+    db_order = session.get(Order, order_id)
 
     if db_order is None:
         raise HTTPException(status_code=404)
@@ -54,12 +54,12 @@ async def update_order(
 
         return db_order
     except ValueError as err:
-        raise HTTPException(status_code=422, detail=str(err))
+        raise HTTPException(status_code=422, detail=str(err)) from err
 
 
-@router.delete("/{id}", status_code=204)
-async def delete_order(*, id: UUID, session: Session = ActiveSession):
-    order = session.get(Order, id)
+@router.delete("/{order_id}", status_code=204)
+async def delete_order(*, order_id: UUID, session: Session = ActiveSession):
+    order = session.get(Order, order_id)
 
     if order is None:
         raise HTTPException(status_code=404)

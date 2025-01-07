@@ -1,6 +1,6 @@
-from pytest import raises, mark
-
 from datetime import datetime, timedelta
+
+from pytest import raises, mark
 from sqlmodel import Session
 
 from api.models import Plan, PlanRequirement
@@ -8,12 +8,12 @@ from api.models import Plan, PlanRequirement
 
 @mark.asyncio
 async def test_plan_valid_with_values(session: Session):
-    data = dict(
-        name='plan 1',
-        total_value=1000,
-        due_date=datetime.now(),
-        status='ACTIVE',
-    )
+    data = {
+        "name": 'plan 1',
+        "total_value": 1000,
+        "due_date": datetime.now(),
+        "status": 'ACTIVE',
+    }
 
     await Plan.validate(data)
     db_plan = Plan(**data)
@@ -30,12 +30,12 @@ async def test_plan_valid_with_values(session: Session):
 
 @mark.asyncio
 async def test_plan_invalid_if_wrong_status():
-    data = dict(
-        name='plan 1',
-        total_value=1000,
-        due_date=datetime.now(),
-        status='RANDOM',
-    )
+    data = {
+        "name": 'plan 1',
+        "total_value": 1000,
+        "due_date": datetime.now(),
+        "status": 'RANDOM',
+    }
 
     with raises(ValueError):
         await Plan.validate(data)
@@ -48,7 +48,7 @@ async def test_plan_requirements_valid_with_values(session: Session):
     session.commit()
     session.refresh(plan)
 
-    data = dict(name='requirement 1', description='description 1', plan_id=plan.id)
+    data = {"name": 'requirement 1', "description": 'description 1', "plan_id": plan.id}
 
     await PlanRequirement.validate(data)
     db_plan_requirement = PlanRequirement(**data)
@@ -70,12 +70,12 @@ async def test_plan_requirements_invalid_if_due_date_gt_plan_date(session: Sessi
     session.commit()
     session.refresh(plan)
 
-    data = dict(
-        name='requirement 1',
-        description='description 1',
-        plan_id=plan.id,
-        due_date=plan.due_date + timedelta(days=1),
-    )
+    data = {
+        "name": 'requirement 1',
+        "description": 'description 1',
+        "plan_id": plan.id,
+        "due_date": plan.due_date + timedelta(days=1),
+    }
 
     with raises(ValueError):
         await PlanRequirement.validate(data, session)

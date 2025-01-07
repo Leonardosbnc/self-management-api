@@ -19,10 +19,10 @@ def shell():
     }
     typer.echo(f"Auto imports: {list(_vars.keys())}")
     try:
-        from IPython import start_ipython
+        from IPython import start_ipython  # pylint: disable=import-outside-toplevel
 
         start_ipython(argv=["--ipython-dir=/tmp", "--no-banner"], user_ns=_vars)
     except ImportError:
-        import code
+        import code  # pylint: disable=import-outside-toplevel
 
         code.InteractiveConsole(_vars).interact()

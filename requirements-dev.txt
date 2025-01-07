@@ -8,3 +8,4 @@ pytest-order
 httpx
 black
 flake8
+pylint

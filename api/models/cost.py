@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID, uuid4
-from sqlmodel import Field, Relationship
 from typing import Optional
+from sqlmodel import Field, Relationship
 
 from api.utils import TimestamppedModel
 
