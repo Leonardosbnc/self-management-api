@@ -29,5 +29,5 @@ def client_fixture(session: Session):
     app.dependency_overrides.clear()
 
 
-from .endpoints import *
-from .models import *
+from .endpoints import *  # pylint: disable=wrong-import-position
+from .models import *  # pylint: disable=wrong-import-position

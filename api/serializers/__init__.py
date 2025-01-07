@@ -1,5 +1,5 @@
 from .cost import CostDetailedResponse, CostRequest, PaymentDetail, PaymentRequest
-from .order import OrderDetailedResponse, OrderRequest
+from .order import OrderDetailedResponse, OrderRequest, OrderUpdate
 from .plan import (
     PlanDetailedResponse,
     PlanInstallmentDetail,
@@ -18,6 +18,7 @@ __all__ = [
     "PaymentRequest",
     "OrderDetailedResponse",
     "OrderRequest",
+    "OrderUpdate",
     "PlanDetailedResponse",
     "PlanInstallmentDetail",
     "PlanInstallmentRequest",

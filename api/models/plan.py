@@ -42,8 +42,8 @@ class PlanRequirement(CustomValidateModel, TimestamppedModel, table=True):
         query = select(Plan).where(Plan.id == obj["plan_id"])
 
         if session is None:
-            with Session(engine) as session:
-                plan = session.exec(query).first()
+            with Session(engine) as _session:
+                plan = _session.exec(query).first()
         else:
             plan = session.exec(query).first()
 

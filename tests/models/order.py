@@ -1,6 +1,6 @@
-from pytest import raises, mark
-
 from datetime import datetime
+
+from pytest import raises, mark
 from sqlmodel import Session
 
 from api.models import Order
@@ -8,15 +8,15 @@ from api.models import Order
 
 @mark.asyncio
 async def test_valid_with_values(session: Session):
-    data = dict(
-        category="crypto",
-        date=datetime.now(),
-        value="1",
-        value_fiat="100",
-        asset="btc",
-        operation_type="BUY",
-        status="ACTIVE",
-    )
+    data = {
+        "category": "crypto",
+        "date": datetime.now(),
+        "value": "1",
+        "value_fiat": "100",
+        "asset": "btc",
+        "operation_type": "BUY",
+        "status": "ACTIVE",
+    }
 
     await Order.validate(data)
     db_order = Order(**data)
@@ -33,15 +33,15 @@ async def test_valid_with_values(session: Session):
 
 @mark.asyncio
 async def test_invalid_if_wrong_status():
-    data = dict(
-        category="crypto",
-        date=datetime.now(),
-        value="1",
-        value_fiat="100",
-        asset="btc",
-        operation_type="BUY",
-        status="RANDOM",
-    )
+    data = {
+        "category": "crypto",
+        "date": datetime.now(),
+        "value": "1",
+        "value_fiat": "100",
+        "asset": "btc",
+        "operation_type": "BUY",
+        "status": "RANDOM",
+    }
 
     with raises(ValueError):
         await Order.validate(data)
@@ -49,15 +49,15 @@ async def test_invalid_if_wrong_status():
 
 @mark.asyncio
 async def test_invalid_if_wrong_operation_type():
-    data = dict(
-        category="crypto",
-        date=datetime.now(),
-        value="1",
-        value_fiat="100",
-        asset="btc",
-        operation_type="RANDOM",
-        status="ACTIVE",
-    )
+    data = {
+        "category": "crypto",
+        "date": datetime.now(),
+        "value": "1",
+        "value_fiat": "100",
+        "asset": "btc",
+        "operation_type": "RANDOM",
+        "status": "ACTIVE",
+    }
 
     with raises(ValueError):
         await Order.validate(data)

@@ -9,11 +9,11 @@ class TimestamppedModel(SQLModel):
 
 class CustomValidateModel(SQLModel):
     @classmethod
-    async def validate(self, obj):
+    async def validate(cls, _):  # pylint: disable=invalid-overridden-method
         raise NotImplementedError()
 
     @classmethod
-    async def model_validate(cls, obj, **kwargs):
+    async def model_validate(cls, obj, **kwargs):  # pylint: disable=invalid-overridden-method
         await cls.validate(dict(obj))
 
         return super().model_validate(obj=obj, **kwargs)
