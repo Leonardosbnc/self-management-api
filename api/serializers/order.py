@@ -25,3 +25,9 @@ class OrderRequest(BaseModel):
     asset: str
     operation_type: str
     status: str
+
+
+class OrderUpdate(BaseModel):
+    category: Optional[str] = None
+    description: Optional[str] = None
+    status: Optional[str] = None

@@ -110,7 +110,35 @@ def test_delete_order(session: Session, client: TestClient):
     res = client.delete(f'/orders/{order.id}')
 
     orders = session.exec(select(Order)).all()
-    print(len(orders))
 
     assert res.status_code == 204
     assert len(orders) == 0
+
+
+def test_update_order(session: Session, client: TestClient):
+    order = Order(
+        asset='asset1',
+        category='cat1',
+        date=datetime.now(),
+        operation_type='BUY',
+        status='ACTIVE',
+        value=100,
+        value_fiat=100,
+    )
+    session.add(order)
+    session.commit()
+    session.refresh(order)
+
+    update_data = dict(status='COMPLETED', description='test description', category='cat test')
+
+    res = client.patch(
+        f'/orders/{order.id}',
+        json=update_data,
+    )
+
+    session.refresh(order)
+
+    assert res.status_code == 200
+
+    for k, v in update_data.items():
+        assert v == getattr(order, k)
